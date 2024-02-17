@@ -13,7 +13,7 @@ defmodule RinhaDeBackend2024Q1.Customers.Customer do
   end
 
   @doc false
-  def changeset(customer, attrs) do
+  def changeset(customer \\ %__MODULE__{}, attrs) do
     customer
     |> cast(attrs, @required_params)
     |> validate_required(@required_params)

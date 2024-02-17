@@ -10,7 +10,7 @@ defmodule RinhaDeBackend2024Q1Web.CustomersController do
     with {:ok, %Customer{} = customer} <- Customers.get(id) do
       conn
       |> put_status(:ok)
-      |> render(:show, customer: customer)
+      |> render(:get, customer: customer)
     end
   end
 end

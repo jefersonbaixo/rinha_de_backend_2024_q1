@@ -5,7 +5,7 @@ defmodule RinhaDeBackend2024Q1Web.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/api", RinhaDeBackend2024Q1Web do
+  scope "/", RinhaDeBackend2024Q1Web do
     pipe_through :api
 
     post "/clientes/:id/transacoes", TransactionsController, :create
