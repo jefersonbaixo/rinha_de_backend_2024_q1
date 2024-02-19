@@ -15,6 +15,13 @@ defmodule RinhaDeBackend2024Q1Web.FallbackController do
     |> render(:error, changeset: changeset)
   end
 
+  def call(conn, {:error, :limit_exceeded}) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> put_view(json: RinhaDeBackend2024Q1Web.ErrorJSON)
+    |> render(:error, message: :limit_exceeded)
+  end
+
   def call(conn, {:error, message}) do
     conn
     |> put_status(:bad_request)

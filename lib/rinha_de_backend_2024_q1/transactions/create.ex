@@ -6,15 +6,15 @@ defmodule RinhaDeBackend2024Q1.Transactions.Create do
   alias RinhaDeBackend2024Q1.Repo
   alias Ecto.Multi
 
-  def call(%{customer_id: customer_id, value: value, type: type} = params) do
-    customer = Customers.Get.call(customer_id)
+  def call(%{"id" => customer_id, "valor" => value, "tipo" => type, "descricao" => _} = params) do
+    customer = Repo.get(Customer, customer_id)
 
     case customer do
-      {:error, :not_found} ->
+      nil ->
         {:error, :not_found}
 
-      {:ok, customer} ->
-        if type == "d" and abs(customer.balance - value) < customer.limit do
+      customer ->
+        if type == "d" and customer.balance - value < customer.limit do
           {:error, :limit_exceeded}
         else
           Multi.new()
@@ -27,6 +27,8 @@ defmodule RinhaDeBackend2024Q1.Transactions.Create do
   end
 
   def update_customer(multi, customer, value, type) do
+    IO.inspect(customer)
+
     new_balance =
       if type == "d" do
         customer.balance - value
@@ -39,10 +41,27 @@ defmodule RinhaDeBackend2024Q1.Transactions.Create do
   end
 
   def process_transaction(multi, transaction) do
-    changeset = Transaction.changeset(%Transaction{}, transaction)
+    IO.inspect(transaction)
+
+    changeset =
+      Transaction.changeset(
+        %Transaction{
+          customer_id: Integer.parse(transaction["id"]) |> elem(0),
+          value: transaction["valor"],
+          type: transaction["tipo"],
+          description: transaction["descricao"]
+        },
+        transaction
+      )
+
     Multi.insert(multi, :transaction, changeset)
   end
 
-  defp handle_result({:ok, _result} = result), do: result
+  defp handle_result(
+         {:ok, %{transaction: %Transaction{}, update_customer: %Customer{} = customer}}
+       ) do
+    {:ok, %Customer{balance: customer.balance, limit: customer.limit}}
+  end
+
   defp handle_result({:error, _, reason, _}), do: {:error, reason}
 end

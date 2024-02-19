@@ -31,5 +31,7 @@ defmodule RinhaDeBackend2024Q1Web.ErrorJSON do
     }
   end
 
+  def error(%{message: :limit_exceeded}), do: %{message: "Limite excedido"}
+
   def error(%{message: message}), do: %{message: message}
 end
