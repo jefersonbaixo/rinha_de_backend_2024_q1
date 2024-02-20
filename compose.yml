@@ -10,8 +10,11 @@ services:
       - DATABASE_URL=postgres://docker:docker@localhost:5432/rinha
       - CREATE_TABLE=true
       - SECRET_KEY_BASE=Hy7pQWVbcnpz7w45pawgl5aqG7HdyDHiXQh/dGQN0bVDCKIPKd4D1aiN3v24F0Jg
+    ports:
+      - "4000:4000"
     depends_on:
       - postgres
+
     # deploy:
       # resources:
         # limits:
@@ -28,6 +31,8 @@ services:
       - DATABASE_URL=postgres://docker:docker@localhost:5432/rinha
       - CREATE_TABLE=false
       - SECRET_KEY_BASE=Hy7pQWVbcnpz7w45pawgl5aqG7HdyDHiXQh/dGQN0bVDCKIPKd4D1aiN3v24F0Jg
+    ports:
+      - "4001:4001"
 
   postgres:
     image: postgres:16.1-alpine3.19
