@@ -9,6 +9,7 @@ RUN mix local.hex --force && \
 
 COPY . .
 
-RUN mix do deps.get, deps.compile
-
+RUN mix deps.get && \
+    mix compile
+    
 CMD ["mix", "phx.server"]

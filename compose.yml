@@ -1,20 +1,19 @@
 version: '3.5'
 services:
-  api01: &api
+  api01:
     build: .
     hostname: api01
-    network_mode: host
     container_name: api01-phoenix
     environment:
       - PHX_HOST=api01
-      - DATABASE_URL=postgres://docker:docker@localhost:5432/rinha
-      - CREATE_TABLE=true
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/rinha
       - SECRET_KEY_BASE=Hy7pQWVbcnpz7w45pawgl5aqG7HdyDHiXQh/dGQN0bVDCKIPKd4D1aiN3v24F0Jg
     ports:
       - "4000:4000"
     depends_on:
       - postgres
-
+    networks:
+      - api_network
     # deploy:
       # resources:
         # limits:
@@ -22,28 +21,33 @@ services:
           # memory: '150MB'
 
   api02:
-    <<: *api
+    build: .
     hostname: api02
-    network_mode: host
     container_name: api02-phoenix
     environment:
       - PHX_HOST=api02
-      - DATABASE_URL=postgres://docker:docker@localhost:5432/rinha
-      - CREATE_TABLE=false
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/rinha
       - SECRET_KEY_BASE=Hy7pQWVbcnpz7w45pawgl5aqG7HdyDHiXQh/dGQN0bVDCKIPKd4D1aiN3v24F0Jg
       - PORT=4001
     ports:
       - "4001:4001"
+    networks:
+      - api_network
 
   postgres:
     image: postgres:16.1-alpine3.19
-    network_mode: host
     container_name: postgres
+    restart: always
     # command: postgres -c 'max_connections=75' -c 'log_error_verbosity=terse'
+    hostname: postgres
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=rinha
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
+    networks:
+      - api_network
     # deploy:
     #   resources:
     #     limits:
@@ -60,8 +64,14 @@ services:
       - api02
     ports:
       - "9999:9999"
+    networks:
+      - api_network
     # deploy:
     #   resources:
     #     limits:
     #       cpus: '0.1'
     #       memory: '50MB'
+
+networks:
+  api_network:
+    driver: bridge
