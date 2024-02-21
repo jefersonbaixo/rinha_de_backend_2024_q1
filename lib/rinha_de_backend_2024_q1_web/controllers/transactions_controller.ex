@@ -9,7 +9,7 @@ defmodule RinhaDeBackend2024Q1Web.TransactionsController do
   def create(conn, params) do
     with {:ok, %Customer{} = customer} <- Transactions.create(params) do
       conn
-      |> put_status(:created)
+      |> put_status(:ok)
       |> render(:create, customer: customer)
     end
   end
