@@ -10,7 +10,7 @@ defmodule RinhaDeBackend2024Q1Web.FallbackController do
 
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
     conn
-    |> put_status(:bad_request)
+    |> put_status(:unprocessable_entity)
     |> put_view(json: RinhaDeBackend2024Q1Web.ErrorJSON)
     |> render(:error, changeset: changeset)
   end
@@ -24,7 +24,7 @@ defmodule RinhaDeBackend2024Q1Web.FallbackController do
 
   def call(conn, {:error, message}) do
     conn
-    |> put_status(:bad_request)
+    |> put_status(:unprocessable_entity)
     |> put_view(json: RinhaDeBackend2024Q1Web.ErrorJSON)
     |> render(:error, message: message)
   end

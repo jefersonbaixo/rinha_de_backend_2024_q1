@@ -1,4 +1,5 @@
 version: '3.5'
+
 services:
   api01: &api
     build: .
@@ -15,11 +16,11 @@ services:
         condition: service_healthy
     networks:
       - api_network
-    # deploy:
-      # resources:
-        # limits:
-          # cpus: '0.5'
-          # memory: '150MB'
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: '150MB'
           
 
   api02:
@@ -30,6 +31,7 @@ services:
       - PHX_HOST=api02
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/rinha
       - SECRET_KEY_BASE=Hy7pQWVbcnpz7w45pawgl5aqG7HdyDHiXQh/dGQN0bVDCKIPKd4D1aiN3v24F0Jg
+      - CREATE_TABLES=false
       - PORT=4001
     ports:
       - "4001:4001"
@@ -38,8 +40,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    
-
+        
   postgres:
     image: postgres:16.1-alpine3.19
     container_name: postgres
@@ -59,11 +60,11 @@ services:
       retries: 5
     networks:
       - api_network
-    # deploy:
-    #   resources:
-    #     limits:
-    #       cpus: '0.4'
-    #       memory: '200MB'
+    deploy:
+      resources:
+        limits:
+          cpus: '0.4'
+          memory: '200MB'
 
   nginx:
     image: nginx:1.25.3-alpine
@@ -77,11 +78,11 @@ services:
       - "9999:9999"
     networks:
       - api_network
-    # deploy:
-    #   resources:
-    #     limits:
-    #       cpus: '0.1'
-    #       memory: '50MB'
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: '50MB'
 
 networks:
   api_network:

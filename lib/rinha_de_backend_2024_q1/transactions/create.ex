@@ -14,7 +14,7 @@ defmodule RinhaDeBackend2024Q1.Transactions.Create do
         {:error, :not_found}
 
       customer ->
-        if type == "d" and customer.balance - value < customer.limit do
+        if type == "d" and customer.balance - value < customer.limit * -1 do
           {:error, :limit_exceeded}
         else
           Multi.new()

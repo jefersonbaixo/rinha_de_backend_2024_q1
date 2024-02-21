@@ -19,5 +19,8 @@ defmodule RinhaDeBackend2024Q1.Transactions.Transaction do
     transaction
     |> cast(attrs, @required_params)
     |> validate_required(@required_params)
+    |> validate_number(:value, greater_than: 0)
+    |> validate_length(:description, max: 10)
+    |> validate_length(:type, max: 1)
   end
 end
