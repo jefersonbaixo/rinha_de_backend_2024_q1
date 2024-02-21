@@ -9,7 +9,7 @@ defmodule RinhaDeBackend2024Q1.Customers.Get do
     transactions_query =
       from(t in Transaction,
         where: t.customer_id == ^id,
-        order_by: [desc: t.inserted_at],
+        order_by: [desc: t.id],
         limit: 10
       )
 
