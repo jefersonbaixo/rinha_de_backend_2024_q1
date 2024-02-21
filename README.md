@@ -14,6 +14,8 @@ Para rodar o projeto são necessários alguns comandos. Infelizmente não conseg
 
 `$ ./executar-test-local.sh`
 
+- Caso for rodar os testes novamente é importante apagar a pasta `postgres` dentro do projeto para limpar o banco de dados.
+
 ## Stack
 
 - Elixir
