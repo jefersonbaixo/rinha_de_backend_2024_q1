@@ -25,3 +25,5 @@ erl_crash.dump
 # Ignore package tarball (built via "mix hex.build").
 rinha_de_backend_2024_q1-*.tar
 
+/postgres
+
