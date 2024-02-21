@@ -1,18 +1,25 @@
 # RinhaDeBackend2024Q1
 
-To start your Phoenix server:
+Olá!! Meu nome é Jeferson esse é meu projeto para participar da rinha.
 
-  * Run `mix setup` to install and setup dependencies
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+contato: [@jefersonjjb](https://www.instagram.com/jefersonjjb/)
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+# Rodando o projeto
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+Para rodar o projeto são necessários alguns comandos. Infelizmente não consegui fazer funcionar incluindo os comandos no arquivo do compose :/
 
-## Learn more
+- Comando para subir os containers
+  $ docker-compose up -d
+- Comando para rodar as migrations e popular o banco
+  $ docker exec api01-phoenix sh -c "mix ecto.migrate && mix run priv/repo/seeds.exs"
+- Executar os testes
+  $ ./executar-test-local.sh
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+## Stack
+
+- Elixir
+- Phoenix
+- Postgres
+- Nginx
+
+### Obrigado e boa rinha pra nós :D

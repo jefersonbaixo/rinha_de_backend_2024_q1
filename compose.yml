@@ -40,6 +40,11 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: '150MB'
         
   postgres:
     image: postgres:16.1-alpine3.19
@@ -63,7 +68,7 @@ services:
       resources:
         limits:
           cpus: '0.4'
-          memory: '200MB'
+          memory: '230MB'
 
   nginx:
     image: nginx:1.25.3-alpine
@@ -81,7 +86,7 @@ services:
       resources:
         limits:
           cpus: '0.1'
-          memory: '50MB'
+          memory: '20MB'
 
 networks:
   api_network:
