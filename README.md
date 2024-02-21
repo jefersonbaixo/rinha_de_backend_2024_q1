@@ -9,11 +9,11 @@ contato: [@jefersonjjb](https://www.instagram.com/jefersonjjb/)
 Para rodar o projeto são necessários alguns comandos. Infelizmente não consegui fazer funcionar incluindo os comandos no arquivo do compose :/
 
 - Comando para subir os containers
-  $ docker-compose up -d
+  `$ docker-compose up -d`
 - Comando para rodar as migrations e popular o banco
-  $ docker exec api01-phoenix sh -c "mix ecto.migrate && mix run priv/repo/seeds.exs"
+  `$ docker exec api01-phoenix sh -c "mix ecto.migrate && mix run priv/repo/seeds.exs"`
 - Executar os testes
-  $ ./executar-test-local.sh
+  `$ ./executar-test-local.sh`
 
 ## Stack
 
