@@ -45,7 +45,6 @@ services:
     image: postgres:16.1-alpine3.19
     container_name: postgres
     restart: always
-    # command: postgres -c 'max_connections=75' -c 'log_error_verbosity=terse'
     hostname: postgres
     environment:
       - POSTGRES_USER=postgres
