@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
   api01: &api
-    build: .
+    image: jefersonbaixo/rinha-jef-2024-q1
     hostname: api01
     container_name: api01-phoenix
     environment:
@@ -20,7 +20,7 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: '150MB'
+          memory: '125MB'
           
 
   api02:
@@ -44,7 +44,7 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: '150MB'
+          memory: '125MB'
         
   postgres:
     image: postgres:16.1-alpine3.19
@@ -68,7 +68,7 @@ services:
       resources:
         limits:
           cpus: '0.4'
-          memory: '230MB'
+          memory: '280MB'
 
   nginx:
     image: nginx:1.25.3-alpine
