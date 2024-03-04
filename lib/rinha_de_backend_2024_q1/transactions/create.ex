@@ -6,7 +6,15 @@ defmodule RinhaDeBackend2024Q1.Transactions.Create do
   alias RinhaDeBackend2024Q1.Repo
   alias Ecto.Multi
 
-  def call(%{"id" => customer_id, "valor" => value, "tipo" => type, "descricao" => _} = params) do
+  def call(params) do
+    if valid_params?(params) do
+      execute(params)
+    else
+      {:error, :invalid_params}
+    end
+  end
+
+  def execute(%{"id" => customer_id, "valor" => value, "tipo" => type, "descricao" => _} = params) do
     customer = Repo.get(Customer, customer_id)
 
     case customer do
@@ -62,4 +70,12 @@ defmodule RinhaDeBackend2024Q1.Transactions.Create do
   end
 
   defp handle_result({:error, _, reason, _}), do: {:error, reason}
+
+  defp valid_params?(%{"id" => id, "valor" => value, "tipo" => type, "descricao" => description}) do
+    is_integer(id) and
+      is_integer(value) and
+      (type == "c" ||
+         type == "d") and
+      description |> String.length() <= 10
+  end
 end
