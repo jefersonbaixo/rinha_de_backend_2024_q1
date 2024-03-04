@@ -47,8 +47,6 @@ defmodule RinhaDeBackend2024Q1.Transactions.Create do
   end
 
   def process_transaction(multi, transaction) do
-    IO.inspect(transaction)
-
     changeset =
       Transaction.changeset(
         %Transaction{
