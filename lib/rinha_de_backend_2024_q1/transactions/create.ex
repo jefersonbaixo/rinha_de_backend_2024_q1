@@ -62,9 +62,13 @@ defmodule RinhaDeBackend2024Q1.Transactions.Create do
   end
 
   defp handle_result(
-         {:ok, %{transaction: %Transaction{}, update_customer: %Customer{} = customer}}
+         {:ok,
+          %{
+            transaction: %Transaction{},
+            update_customer: %Customer{balance => balance, limit => limit}
+          }}
        ) do
-    {:ok, %Customer{balance: customer.balance, limit: customer.limit}}
+    {:ok, %Customer{balance: balance, limit: limit}}
   end
 
   defp handle_result({:error, _, reason, _}), do: {:error, reason}
