@@ -12,8 +12,8 @@
 
 alias RinhaDeBackend2024Q1.{Repo, Customers}
 
-Repo.insert!(%Customers.Customer{limit: 100_000, balance: 0})
-Repo.insert!(%Customers.Customer{limit: 80000, balance: 0})
-Repo.insert!(%Customers.Customer{limit: 1_000_000, balance: 0})
-Repo.insert!(%Customers.Customer{limit: 10_000_000, balance: 0})
-Repo.insert!(%Customers.Customer{limit: 500_000, balance: 0})
+Repo.insert!(%Customers.Customer{id: 1, limit: 1000 * 100, balance: 0})
+Repo.insert!(%Customers.Customer{id: 2, limit: 800 * 100, balance: 0})
+Repo.insert!(%Customers.Customer{id: 3, limit: 10000 * 100, balance: 0})
+Repo.insert!(%Customers.Customer{id: 4, limit: 100_000 * 100, balance: 0})
+Repo.insert!(%Customers.Customer{id: 5, limit: 5000 * 100, balance: 0})

@@ -27,8 +27,6 @@ defmodule RinhaDeBackend2024Q1.Transactions.Create do
   end
 
   def update_customer(multi, customer, value, type) do
-    IO.inspect(customer)
-
     new_balance =
       if type == "d" do
         customer.balance - value
