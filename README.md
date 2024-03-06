@@ -2,11 +2,15 @@
 
 Olá!! Meu nome é Jeferson esse é meu projeto para participar da rinha.
 
-contato: [@jefersonjjb](https://www.instagram.com/jefersonjjb/)
+contato: [LinkedIn](https://www.linkedin.com/in/jeferson-baixo-77b00711a/)
+[Discord](https://discord.com/users/jefersonbaixo)
+[email](jeferson.baixo@gmail.com)
+
+link do projeto: [rinha-de-backend-2024-q1](https://github.com/jefersonbaixo/rinha_de_backend_2024_q1)
 
 # Rodando o projeto
 
-Para rodar o projeto são necessários alguns comandos. Infelizmente não consegui fazer funcionar incluindo os comandos no arquivo do compose :/
+Para rodar o projeto são necessários alguns comandos. Infelizmente não consegui fazer funcionar incluindo os comandos no arquivo do compose :/ (Sou meio novo nesse rolê de backend, rsrs)
 
 `$ docker-compose up -d`
 
@@ -23,4 +27,4 @@ Para rodar o projeto são necessários alguns comandos. Infelizmente não conseg
 - Postgres
 - Nginx
 
-### Obrigado e boa rinha pra nós :D
+### Boa rinha pra nós :D

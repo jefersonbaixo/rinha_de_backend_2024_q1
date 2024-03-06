@@ -1,4 +1,6 @@
 defmodule RinhaDeBackend2024Q1.Transactions.Create do
+  import Ecto.Query
+
   alias RinhaDeBackend2024Q1.Customers
   alias RinhaDeBackend2024Q1.Transactions
   alias Customers.Customer
@@ -7,77 +9,83 @@ defmodule RinhaDeBackend2024Q1.Transactions.Create do
   alias Ecto.Multi
 
   def call(params) do
-    if valid_params?(params) do
-      execute(params)
-    else
-      {:error, :invalid_params}
+    case valid_params?(params) do
+      true -> execute(params)
+      false -> {:error, :invalid_params}
     end
   end
 
-  def execute(%{"id" => customer_id, "valor" => value, "tipo" => type, "descricao" => _} = params) do
-    customer = Repo.get(Customer, customer_id)
+  def execute(
+        %{
+          "id" => customer_id,
+          "valor" => value,
+          "tipo" => type,
+          "descricao" => description
+        } =
+          params
+      ) do
+    customer_update =
+      from Customer,
+        where: [id: ^customer_id],
+        update: [inc: [balance: ^get_value(value, type)]]
 
-    case customer do
-      nil ->
-        {:error, :not_found}
-
-      customer ->
-        if type == "d" and customer.balance - value < customer.limit * -1 do
-          {:error, :limit_exceeded}
-        else
-          Multi.new()
-          |> update_customer(customer, value, type)
-          |> process_transaction(params)
-          |> Repo.transaction()
-          |> handle_result()
-        end
-    end
-  end
-
-  def update_customer(multi, customer, value, type) do
-    new_balance =
-      if type == "d" do
-        customer.balance - value
-      else
-        customer.balance + value
-      end
-
-    changeset = Customer.changeset(customer, %{balance: new_balance})
-    Multi.update(multi, :update_customer, changeset)
-  end
-
-  def process_transaction(multi, transaction) do
-    changeset =
+    transaction_insert =
       Transaction.changeset(
         %Transaction{
-          customer_id: Integer.parse(transaction["id"]) |> elem(0),
-          value: transaction["valor"],
-          type: transaction["tipo"],
-          description: transaction["descricao"]
+          value: value,
+          type: String.to_atom(type),
+          description: description,
+          customer_id: String.to_integer(customer_id)
         },
-        transaction
+        params
       )
 
-    Multi.insert(multi, :transaction, changeset)
+    Multi.new()
+    |> Multi.update_all(:customer_update, customer_update, [])
+    |> Multi.run(:check_balance, fn repo, _ ->
+      check_balance(repo, customer_id)
+    end)
+    |> Multi.insert(:transaction_insert, transaction_insert)
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{customer_update: _}} -> handle_success(customer_id)
+      {:error, :check_balance, :limit_exceeded, _} -> {:error, :limit_exceeded}
+      {:error, error} -> {:error, error}
+    end
   end
 
-  defp handle_result(
-         {:ok,
-          %{
-            transaction: %Transaction{},
-            update_customer: %Customer{balance => balance, limit => limit}
-          }}
-       ) do
-    {:ok, %Customer{balance: balance, limit: limit}}
+  defp check_balance(repo, customer_id) do
+    customer = repo.get(Customer, customer_id)
+
+    if customer.balance < -customer.limit do
+      {:error, :limit_exceeded}
+    else
+      {:ok, customer}
+    end
   end
 
-  defp handle_result({:error, _, reason, _}), do: {:error, reason}
+  defp handle_success(customer_id) do
+    customer = Repo.get(Customer, customer_id)
 
-  defp valid_params?(%{"id" => id, "valor" => value, "tipo" => type, "descricao" => description}) do
-    is_integer(id) and
-      is_integer(value) and
-      (type == "c" ||
-         type == "d") and
-      description |> String.length() <= 10
+    {:ok,
+     %Customer{
+       balance: customer.balance,
+       limit: customer.limit
+     }}
   end
+
+  defp get_value(value, type) do
+    case type do
+      "c" -> value
+      _ -> -value
+    end
+  end
+
+  defp valid_params?(%{"id" => _, "valor" => _, "tipo" => type, "descricao" => description}) do
+    (type == "c" ||
+       type == "d") and
+      (description != nil and String.length(description) <= 10 && String.length(description) > 0)
+  end
+
+  defp valid_params?(_), do: false
 end
