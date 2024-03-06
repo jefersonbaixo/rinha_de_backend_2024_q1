@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
   api01: &api
-    build: .
+    image: jefersonbaixo/rinha-jef-2024-q1
     hostname: api01
     container_name: api01-phoenix
     environment:
