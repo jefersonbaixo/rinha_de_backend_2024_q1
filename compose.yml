@@ -20,7 +20,7 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: '160MB'
+          memory: '180MB'
           
 
   api02:
@@ -44,7 +44,7 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: '160MB'
+          memory: '180MB'
         
   postgres:
     image: postgres:latest
@@ -69,7 +69,7 @@ services:
       resources:
         limits:
           cpus: '0.4'
-          memory: '200MB'
+          memory: '160MB'
 
   nginx:
     image: nginx:1.25.3-alpine
