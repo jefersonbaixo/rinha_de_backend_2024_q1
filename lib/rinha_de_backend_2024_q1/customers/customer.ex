@@ -8,7 +8,7 @@ defmodule RinhaDeBackend2024Q1.Customers.Customer do
 
   schema "customers" do
     field :balance, :integer
-    field :limit, :integer
+    field :max_limit, :integer
     has_many :transactions, Transaction
   end
 

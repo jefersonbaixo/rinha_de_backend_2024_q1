@@ -13,7 +13,7 @@ defmodule RinhaDeBackend2024Q1Web.CustomersJSON do
       saldo: %{
         total: customer.balance,
         data_extrato: DateTime.utc_now(),
-        limite: customer.limit
+        limite: customer.max_limit
       },
       ultimas_transacoes: Enum.map(customer.transactions, &transaction_data/1)
     }

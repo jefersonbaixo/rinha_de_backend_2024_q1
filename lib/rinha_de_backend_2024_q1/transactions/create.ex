@@ -57,7 +57,7 @@ defmodule RinhaDeBackend2024Q1.Transactions.Create do
   defp check_balance(repo, customer_id) do
     customer = repo.get(Customer, customer_id)
 
-    if customer.balance < -customer.limit do
+    if customer.balance < -customer.max_limit do
       {:error, :limit_exceeded}
     else
       {:ok, customer}
@@ -70,7 +70,7 @@ defmodule RinhaDeBackend2024Q1.Transactions.Create do
     {:ok,
      %Customer{
        balance: customer.balance,
-       limit: customer.limit
+       max_limit: customer.max_limit
      }}
   end
 

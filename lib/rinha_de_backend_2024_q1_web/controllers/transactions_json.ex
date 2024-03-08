@@ -9,7 +9,7 @@ defmodule RinhaDeBackend2024Q1Web.TransactionsJSON do
 
   defp data(%Customer{} = customer) do
     %{
-      limite: customer.limit,
+      limite: customer.max_limit,
       saldo: customer.balance
     }
   end
