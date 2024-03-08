@@ -56,7 +56,6 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=rinha
     volumes:
-      - ./postgres:/var/lib/postgresql/data
       - ./setup/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres -d rinha" ]
