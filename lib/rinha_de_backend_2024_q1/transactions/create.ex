@@ -10,32 +10,55 @@ defmodule RinhaDeBackend2024Q1.Transactions.Create do
 
   def call(params) do
     case valid_params?(params) do
-      true -> execute(params)
-      false -> {:error, :invalid_params}
+      {:ok, valid_params} -> execute(valid_params)
+      {:error, error} -> {:error, error}
     end
   end
 
   def execute(
-        %{
-          "id" => customer_id,
-          "valor" => value,
-          "tipo" => type,
-          "descricao" => description
-        } =
-          params
+        %{customer_id: customer_id, value: value, type: :c, description: description} = params
       ) do
     customer_update =
       from Customer,
         where: [id: ^customer_id],
-        update: [inc: [balance: ^get_value(value, type)]]
+        update: [inc: [balance: ^(+value)]]
 
     transaction_insert =
       Transaction.changeset(
         %Transaction{
           value: value,
-          type: String.to_atom(type),
+          type: :c,
           description: description,
-          customer_id: String.to_integer(customer_id)
+          customer_id: customer_id
+        },
+        params
+      )
+
+    Multi.new()
+    |> Multi.update_all(:customer_update, customer_update, [])
+    |> Multi.insert(:transaction_insert, transaction_insert)
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{customer_update: _}} -> handle_success(customer_id)
+      {:error, error} -> {:error, error}
+    end
+  end
+
+  def execute(
+        %{customer_id: customer_id, value: value, type: :d, description: description} = params
+      ) do
+    customer_update =
+      from Customer,
+        where: [id: ^customer_id],
+        update: [inc: [balance: ^(-value)]]
+
+    transaction_insert =
+      Transaction.changeset(
+        %Transaction{
+          value: value,
+          type: :d,
+          description: description,
+          customer_id: customer_id
         },
         params
       )
@@ -74,18 +97,30 @@ defmodule RinhaDeBackend2024Q1.Transactions.Create do
      }}
   end
 
-  defp get_value(value, type) do
-    case type do
-      "c" -> value
-      _ -> -value
+  defp valid_params?(%{
+         "id" => customer_id,
+         "valor" => value,
+         "tipo" => type,
+         "descricao" => description
+       }) do
+    if(
+      (type == "c" ||
+         type == "d") and
+        is_integer(value) and
+        is_integer(String.to_integer(customer_id)) and
+        (description != nil and String.length(description) <= 10 && String.length(description) > 0)
+    ) do
+      {:ok,
+       %{
+         customer_id: String.to_integer(customer_id),
+         value: value,
+         type: String.to_atom(type),
+         description: description
+       }}
+    else
+      {:error, :invalid_params}
     end
   end
 
-  defp valid_params?(%{"id" => _, "valor" => _, "tipo" => type, "descricao" => description}) do
-    (type == "c" ||
-       type == "d") and
-      (description != nil and String.length(description) <= 10 && String.length(description) > 0)
-  end
-
-  defp valid_params?(_), do: false
+  defp valid_params?(_), do: {:error, :invalid_params}
 end
